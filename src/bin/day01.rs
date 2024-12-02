@@ -1,4 +1,8 @@
-use std::{io::{Read, stdin}, collections::HashMap};
+use std::{
+    collections::HashMap,
+    io::{stdin, Read},
+    iter::zip,
+};
 
 #[cfg(test)]
 static TEST_INPUT: &str = "3   4
@@ -28,12 +32,7 @@ fn part1(input: &str) -> i32 {
     list1.sort();
     list2.sort();
 
-    let mut ans = 0;
-    for i in 0..list1.len() {
-        ans += (list1[i] - list2[i]).abs();
-    }
-
-    ans
+    zip(list1, list2).map(|(a, b)| (a - b).abs()).sum()
 }
 
 #[test]
@@ -43,18 +42,16 @@ fn test_part1() {
 
 fn part2(input: &str) -> i32 {
     let (list1, list2) = parse(input);
-    let mut occurrences = HashMap::<i32,i32>::new();
-    let mut ans = 0;
+    let mut occurrences = HashMap::<i32, i32>::new();
 
     for x in list2 {
-        occurrences.entry(x).and_modify(|n| *n += 1).or_insert(1);
+        occurrences.insert(x, occurrences.get(&x).unwrap_or(&0) + 1);
     }
 
-    for x in list1 {
-        ans += x * occurrences.get(&x).unwrap_or(&0);
-    }
-
-    ans
+    list1
+        .iter()
+        .map(|x| x * occurrences.get(&x).unwrap_or(&0))
+        .sum()
 }
 
 #[test]
