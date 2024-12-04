@@ -16,14 +16,16 @@ enum Instruction {
 
 fn parse(input: &str) -> Vec<Instruction> {
     // let re = Regex::new(r"(?<op>do|don't|mul)\((?:(?<a>\d+),(?<b>\d+))?\)").unwrap();
-    let re = RegexBuilder::new(r"
+    let re = RegexBuilder::new(
+        r"
         (?<op>do|don't|mul)\(
             (?:(?<a>\d+),(?<b>\d+))?
         \)
-    ")
-        .ignore_whitespace(true)
-        .build()
-        .unwrap();
+    ",
+    )
+    .ignore_whitespace(true)
+    .build()
+    .unwrap();
     let mut result = vec![];
     for cap in re.captures_iter(input) {
         let Some(op) = cap.name("op") else {
