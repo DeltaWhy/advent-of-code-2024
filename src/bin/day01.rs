@@ -50,7 +50,7 @@ fn part2(input: &str) -> i32 {
 
     list1
         .iter()
-        .map(|x| x * occurrences.get(&x).unwrap_or(&0))
+        .map(|x| x * occurrences.get(x).unwrap_or(&0))
         .sum()
 }
 

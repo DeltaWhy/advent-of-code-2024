@@ -28,13 +28,8 @@ fn is_safe(report: &&Vec<i32>) -> bool {
     let pairs = zip(&report[0..report.len() - 1], &report[1..]);
     let diffs = pairs.map(|(a, b)| b - a);
 
-    if diffs.clone().all(|item| (1..=3).contains(&item)) {
-        true
-    } else if diffs.clone().all(|item| (-3..=-1).contains(&item)) {
-        true
-    } else {
-        false
-    }
+    diffs.clone().all(|item| (1..=3).contains(&item))
+        || diffs.clone().all(|item| (-3..=-1).contains(&item))
 }
 
 fn part1(input: &str) -> i32 {
