@@ -3,7 +3,7 @@ use std::io::{stdin, Read};
 #[cfg(test)]
 static TEST_INPUT: &str = todo!();
 
-fn parse(input: &str) -> (Vec<i32>, Vec<i32>) {
+fn parse(input: &str) -> ! {
     todo!();
 }
 
@@ -13,7 +13,7 @@ fn part1(input: &str) -> i32 {
 
 #[test]
 fn test_part1() {
-    assert_eq!(part1(TEST_INPUT), todo!());
+    assert_eq!(part1(TEST_INPUT), 0);
 }
 
 fn part2(input: &str) -> i32 {
@@ -22,7 +22,7 @@ fn part2(input: &str) -> i32 {
 
 #[test]
 fn test_part2() {
-    assert_eq!(part2(TEST_INPUT), todo!());
+    assert_eq!(part2(TEST_INPUT), 0);
 }
 
 fn main() {
