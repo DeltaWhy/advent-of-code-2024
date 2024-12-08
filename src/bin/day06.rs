@@ -1,9 +1,5 @@
-use advent_of_code_2024::Vec2;
-use core::fmt;
-use std::{
-    fmt::{Debug, Display, Formatter},
-    io::{stdin, Read},
-};
+use advent_of_code_2024::{Direction, Grid, Vec2};
+use std::io::{stdin, Read};
 
 #[cfg(test)]
 static TEST_INPUT: &str = "....#.....
@@ -16,75 +12,6 @@ static TEST_INPUT: &str = "....#.....
 ........#.
 #.........
 ......#...";
-
-#[derive(Debug, Clone, Copy)]
-enum Direction {
-    Up,
-    Right,
-    Down,
-    Left,
-}
-
-impl Direction {
-    fn turn_right(self) -> Self {
-        match self {
-            Direction::Up => Direction::Right,
-            Direction::Right => Direction::Down,
-            Direction::Down => Direction::Left,
-            Direction::Left => Direction::Up,
-        }
-    }
-
-    fn as_vec2(self) -> Vec2<isize> {
-        match self {
-            Direction::Up => Vec2 { x: 0, y: -1 },
-            Direction::Right => Vec2 { x: 1, y: 0 },
-            Direction::Down => Vec2 { x: 0, y: 1 },
-            Direction::Left => Vec2 { x: -1, y: 0 },
-        }
-    }
-}
-
-struct Grid {
-    data: Vec<Vec<char>>,
-}
-
-impl Debug for Grid {
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), std::fmt::Error> {
-        writeln!(f, "Grid {{")?;
-        for line in &self.data {
-            writeln!(f, "\t{}", line.iter().cloned().collect::<String>())?;
-        }
-        write!(f, "}}")?;
-        Ok(())
-    }
-}
-
-impl Display for Grid {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        for line in &self.data {
-            writeln!(f, "{}", line.iter().cloned().collect::<String>())?;
-        }
-        Ok(())
-    }
-}
-
-impl Grid {
-    fn grid_get(&self, x: isize, y: isize) -> Option<char> {
-        let x: usize = x.try_into().ok()?;
-        let y: usize = y.try_into().ok()?;
-        Some(*self.data.get(y)?.get(x)?)
-    }
-    #[allow(dead_code)]
-    fn subgrid(&self, x: usize, y: usize, w: usize, h: usize) -> Option<Self> {
-        let lines = self.data.get(y..y + h)?;
-        let mut result = vec![];
-        for line in lines {
-            result.push(line.get(x..x + w)?.to_owned());
-        }
-        Some(Grid { data: result })
-    }
-}
 
 fn parse(input: &str) -> Grid {
     Grid {

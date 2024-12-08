@@ -1,4 +1,4 @@
-use advent_of_code_2024::Grid;
+use advent_of_code_2024::GridTrait;
 use std::io::{stdin, Read};
 
 #[cfg(test)]
