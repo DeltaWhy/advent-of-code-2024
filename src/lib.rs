@@ -1,5 +1,5 @@
 use std::fmt::{self, Debug, Display, Formatter};
-use std::ops::{Add, Sub};
+use std::ops::{Add, AddAssign, Sub, SubAssign};
 
 #[test]
 fn test_vec2() {
@@ -33,6 +33,20 @@ impl<T: Sub<Output = T>> Sub for Vec2<T> {
             x: self.x - other.x,
             y: self.y - other.y,
         }
+    }
+}
+
+impl<T: AddAssign> AddAssign for Vec2<T> {
+    fn add_assign(&mut self, rhs: Self) {
+        self.x += rhs.x;
+        self.y += rhs.y;
+    }
+}
+
+impl<T: SubAssign> SubAssign for Vec2<T> {
+    fn sub_assign(&mut self, rhs: Self) {
+        self.x -= rhs.x;
+        self.y -= rhs.y;
     }
 }
 

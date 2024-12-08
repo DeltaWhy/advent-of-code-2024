@@ -24,23 +24,31 @@ fn parse(input: &str) -> Grid {
     }
 }
 
-fn part1(input: &str) -> usize {
-    let grid = parse(input);
+fn get_frequencies(grid: &Grid) -> HashSet<char> {
     let mut unique_chars: HashSet<char> = HashSet::new();
     for (_, c) in grid.iter_positions() {
         unique_chars.insert(c);
     }
     unique_chars.remove(&'.');
-    // println!("{unique_chars:?}");
-    let mut antinodes: HashSet<(usize, usize)> = HashSet::new();
-    for freq in unique_chars {
-        let mut antennas: Vec<(usize, usize)> = vec![];
-        for ((x, y), c) in grid.iter_positions() {
-            if c == freq {
-                antennas.push((x, y));
-            }
+    unique_chars
+}
+
+fn get_antenna_positions(grid: &Grid, frequency: char) -> Vec<(usize, usize)> {
+    let mut antennas: Vec<(usize, usize)> = vec![];
+    for ((x, y), c) in grid.iter_positions() {
+        if c == frequency {
+            antennas.push((x, y));
         }
+    }
+    antennas
+}
+
+fn part1(input: &str) -> usize {
+    let grid = parse(input);
+    let mut antinodes: HashSet<(usize, usize)> = HashSet::new();
+    for freq in get_frequencies(&grid) {
         // println!("{freq}: {antennas:?}");
+        let antennas = get_antenna_positions(&grid, freq);
         for i in 0..antennas.len() - 1 {
             for j in i + 1..antennas.len() {
                 let a: Vec2<isize> = Vec2 {
@@ -74,12 +82,47 @@ fn test_part1() {
     assert_eq!(part1(TEST_INPUT), 14);
 }
 
-fn part2(_input: &str) -> usize {
-    0
+fn part2(input: &str) -> usize {
+    // I think this might be incomplete - distance between two antennas may not be a simplified
+    // ratio, e.g. (2,4) so we'd miss grid points at (1,2) intervals that are also collinear.
+    // It worked for my input though.
+    let grid = parse(input);
+    let mut antinodes: HashSet<(usize, usize)> = HashSet::new();
+    for freq in get_frequencies(&grid) {
+        // println!("{freq}: {antennas:?}");
+        let antennas = get_antenna_positions(&grid, freq);
+        for i in 0..antennas.len() - 1 {
+            antinodes.insert(antennas[i]);
+            for j in i + 1..antennas.len() {
+                let a: Vec2<isize> = Vec2 {
+                    x: antennas[i].0 as isize,
+                    y: antennas[i].1 as isize,
+                };
+                let b: Vec2<isize> = Vec2 {
+                    x: antennas[j].0 as isize,
+                    y: antennas[j].1 as isize,
+                };
+                antinodes.insert(antennas[j]);
+                let delta = a - b;
+                // println!("{a:?} - {b:?} = {delta:?}");
+                let mut anti = a + delta;
+                while grid.rect().contains(anti) {
+                    antinodes.insert((anti.x as usize, anti.y as usize));
+                    anti += delta;
+                }
+                let mut anti = b - delta;
+                while grid.rect().contains(anti) {
+                    antinodes.insert((anti.x as usize, anti.y as usize));
+                    anti -= delta;
+                }
+            }
+        }
+        // println!("{antinodes:?}");
+    }
+    antinodes.len()
 }
 
 #[test]
-#[ignore]
 fn test_part2() {
     assert_eq!(part2(TEST_INPUT), 34);
 }
