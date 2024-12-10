@@ -11,7 +11,7 @@ fn parse(input: &str) -> Vec<usize> {
         .collect()
 }
 
-fn map_to_disk(disk_map: &Vec<usize>) -> Vec<Option<usize>> {
+fn map_to_disk(disk_map: &[usize]) -> Vec<Option<usize>> {
     let mut disk = vec![];
     for i in (0..disk_map.len()).step_by(2) {
         let id = i / 2;
@@ -58,7 +58,7 @@ fn part1(input: &str) -> usize {
             i += 1;
             continue;
         }
-        while disk[disk.len() - 1] == None {
+        while disk[disk.len() - 1].is_none() {
             disk.pop();
         }
         if i < disk.len() {

@@ -10,7 +10,7 @@ fn test_vec2() {
     assert_eq!(v1, v3);
 }
 
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy, Hash)]
 pub struct Vec2<T> {
     pub x: T,
     pub y: T,
@@ -96,6 +96,12 @@ pub enum Direction {
 }
 
 impl Direction {
+    pub const DIRECTIONS: [Direction; 4] = [
+        Direction::Up,
+        Direction::Right,
+        Direction::Down,
+        Direction::Left,
+    ];
     pub fn turn_right(self) -> Self {
         match self {
             Direction::Up => Direction::Right,
@@ -140,6 +146,11 @@ impl Display for Grid {
 }
 
 impl Grid {
+    pub fn from(input: &str) -> Grid {
+        Grid {
+            data: input.lines().map(|line| line.chars().collect()).collect(),
+        }
+    }
     pub fn grid_get(&self, x: isize, y: isize) -> Option<char> {
         let x: usize = x.try_into().ok()?;
         let y: usize = y.try_into().ok()?;
