@@ -1,5 +1,5 @@
-use std::{io::{stdin, Read}, thread::sleep, time::Duration};
-use advent_of_code_2024::{Vec2, Grid};
+use advent_of_code_2024::{Grid, Vec2};
+use std::io::{stdin, Read};
 
 #[cfg(test)]
 static TEST_INPUT: &str = "p=0,4 v=3,-3
@@ -18,21 +18,30 @@ p=9,5 v=-3,-3";
 #[derive(Debug)]
 struct Robot {
     p: Vec2<isize>,
-    v: Vec2<isize>
+    v: Vec2<isize>,
 }
 
 fn parse(input: &str) -> Vec<Robot> {
-    input.lines().map(|line| {
-        let (p_str, v_str) = line.trim().split_once(" ").unwrap();
-        let (_, p_str) = p_str.split_once("=").unwrap();
-        let (px, py) = p_str.split_once(",").unwrap();
-        let (_, v_str) = v_str.split_once("=").unwrap();
-        let (vx, vy) = v_str.split_once(",").unwrap();
-        Robot {
-            p: Vec2 { x: px.parse().unwrap(), y: py.parse().unwrap() },
-            v: Vec2 { x: vx.parse().unwrap(), y: vy.parse().unwrap() }
-        }
-    }).collect()
+    input
+        .lines()
+        .map(|line| {
+            let (p_str, v_str) = line.trim().split_once(" ").unwrap();
+            let (_, p_str) = p_str.split_once("=").unwrap();
+            let (px, py) = p_str.split_once(",").unwrap();
+            let (_, v_str) = v_str.split_once("=").unwrap();
+            let (vx, vy) = v_str.split_once(",").unwrap();
+            Robot {
+                p: Vec2 {
+                    x: px.parse().unwrap(),
+                    y: py.parse().unwrap(),
+                },
+                v: Vec2 {
+                    x: vx.parse().unwrap(),
+                    y: vy.parse().unwrap(),
+                },
+            }
+        })
+        .collect()
 }
 
 fn part1(input: &str, w: isize, h: isize) -> isize {
@@ -49,34 +58,46 @@ fn part1(input: &str, w: isize, h: isize) -> isize {
         robot.p.x = x;
         robot.p.y = y;
     }
-    let q1: isize = robots.iter().map(|robot| {
-        if robot.p.x < w/2 && robot.p.y < h/2 {
-            1
-        } else {
-            0
-        }
-    }).sum();
-    let q2: isize = robots.iter().map(|robot| {
-        if robot.p.x > w/2 && robot.p.y < h/2 {
-            1
-        } else {
-            0
-        }
-    }).sum();
-    let q3: isize = robots.iter().map(|robot| {
-        if robot.p.x < w/2 && robot.p.y > h/2 {
-            1
-        } else {
-            0
-        }
-    }).sum();
-    let q4: isize = robots.iter().map(|robot| {
-        if robot.p.x > w/2 && robot.p.y > h/2 {
-            1
-        } else {
-            0
-        }
-    }).sum();
+    let q1: isize = robots
+        .iter()
+        .map(|robot| {
+            if robot.p.x < w / 2 && robot.p.y < h / 2 {
+                1
+            } else {
+                0
+            }
+        })
+        .sum();
+    let q2: isize = robots
+        .iter()
+        .map(|robot| {
+            if robot.p.x > w / 2 && robot.p.y < h / 2 {
+                1
+            } else {
+                0
+            }
+        })
+        .sum();
+    let q3: isize = robots
+        .iter()
+        .map(|robot| {
+            if robot.p.x < w / 2 && robot.p.y > h / 2 {
+                1
+            } else {
+                0
+            }
+        })
+        .sum();
+    let q4: isize = robots
+        .iter()
+        .map(|robot| {
+            if robot.p.x > w / 2 && robot.p.y > h / 2 {
+                1
+            } else {
+                0
+            }
+        })
+        .sum();
     q1 * q2 * q3 * q4
 }
 

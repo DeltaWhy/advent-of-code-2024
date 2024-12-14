@@ -113,9 +113,93 @@ fn test_part1() {
     assert_eq!(part1(TEST_INPUT), 480);
 }
 
-#[allow(dead_code)]
-fn part2(_input: &str) -> i32 {
-    todo!();
+fn solve_machine2(machine: &ClawMachine) -> Option<usize> {
+    // solve as a system of equations
+    // ax*a + bx * b = px
+    // ay*a + by * b = py
+    //
+    // ay*ax*a + ay*bx*b = ay*px
+    // ax*ay*a + ax*by*b = ax*py
+    // (ay*bx - ax*by)*b = ay*px - ax*py
+    // b = (ay*px - ax*py) / (ay*bx - ax*by)
+    // iff b is an integer
+    // ax*a = px - bx*b
+    // a = (px - bx*b) / ax
+    let b_num = machine.a.y * machine.prize.x - machine.a.x * machine.prize.y;
+    let b_denom = machine.a.y * machine.b.x - machine.a.x * machine.b.y;
+    if b_denom == 0 {
+        panic!("would divide by zero");
+    }
+    if b_num % b_denom != 0 {
+        return None;
+    }
+    let b = b_num / b_denom;
+    let a_num = machine.prize.x - machine.b.x * b;
+    if a_num % machine.a.x != 0 {
+        return None;
+    }
+    let a = a_num / machine.a.x;
+    if a < 0 || b < 0 {
+        panic!("got negative result");
+    }
+    Some(machine.cost.a * a as usize + machine.cost.b * b as usize)
+}
+
+#[test]
+fn test_solve2() {
+    assert_eq!(
+        solve_machine2(&ClawMachine {
+            a: Vec2 { x: 94, y: 34 },
+            b: Vec2 { x: 22, y: 67 },
+            prize: Vec2 {
+                x: 1_000_000_000_8400,
+                y: 1_000_000_000_5400
+            },
+            cost: Cost { a: 3, b: 1 }
+        }),
+        None
+    );
+    assert!(solve_machine2(&ClawMachine {
+        a: Vec2 { x: 26, y: 66 },
+        b: Vec2 { x: 67, y: 21 },
+        prize: Vec2 {
+            x: 1_000_000_001_2748,
+            y: 1_000_000_001_2176
+        },
+        cost: Cost { a: 3, b: 1 }
+    })
+    .is_some());
+    assert_eq!(
+        solve_machine2(&ClawMachine {
+            a: Vec2 { x: 17, y: 86 },
+            b: Vec2 { x: 84, y: 37 },
+            prize: Vec2 {
+                x: 1_000_000_000_7870,
+                y: 1_000_000_000_6450
+            },
+            cost: Cost { a: 3, b: 1 }
+        }),
+        None
+    );
+    assert!(solve_machine2(&ClawMachine {
+        a: Vec2 { x: 69, y: 23 },
+        b: Vec2 { x: 27, y: 71 },
+        prize: Vec2 {
+            x: 1_000_000_001_8641,
+            y: 1_000_000_001_0279
+        },
+        cost: Cost { a: 3, b: 1 }
+    })
+    .is_some());
+}
+
+fn part2(input: &str) -> usize {
+    let mut machines = parse(input);
+    for machine in &mut machines {
+        machine.prize.x += 10_000_000_000_000;
+        machine.prize.y += 10_000_000_000_000;
+    }
+    machines.iter().filter_map(solve_machine2).sum()
 }
 
 #[test]
@@ -128,5 +212,5 @@ fn main() {
     let mut input = String::new();
     stdin().read_to_string(&mut input).unwrap();
     println!("Part 1: {}", part1(&input));
-    // println!("Part 2: {}", part2(&input));
+    println!("Part 2: {}", part2(&input));
 }

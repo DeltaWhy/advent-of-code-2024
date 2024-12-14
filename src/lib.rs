@@ -153,7 +153,7 @@ impl Grid {
     }
     pub fn of(c: char, w: usize, h: usize) -> Grid {
         Grid {
-            data: vec![vec![c ; w] ; h]
+            data: vec![vec![c; w]; h],
         }
     }
     pub fn grid_get(&self, x: isize, y: isize) -> Option<char> {
