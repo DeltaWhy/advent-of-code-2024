@@ -7,7 +7,7 @@ fn parse(input: &str) -> ! {
     todo!();
 }
 
-fn part1(input: &str) -> i32 {
+fn part1(input: &str) -> usize {
     todo!();
 }
 
@@ -16,7 +16,7 @@ fn test_part1() {
     assert_eq!(part1(TEST_INPUT), 0);
 }
 
-fn part2(input: &str) -> i32 {
+fn part2(input: &str) -> usize {
     todo!();
 }
 

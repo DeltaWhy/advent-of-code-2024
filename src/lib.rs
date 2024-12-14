@@ -151,6 +151,11 @@ impl Grid {
             data: input.lines().map(|line| line.chars().collect()).collect(),
         }
     }
+    pub fn of(c: char, w: usize, h: usize) -> Grid {
+        Grid {
+            data: vec![vec![c ; w] ; h]
+        }
+    }
     pub fn grid_get(&self, x: isize, y: isize) -> Option<char> {
         let x: usize = x.try_into().ok()?;
         let y: usize = y.try_into().ok()?;
